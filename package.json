@@ -1,0 +1,36 @@
+{
+  "name": "browser-interceptor",
+  "version": "1.0.0",
+  "description": "Local-only developer tool to intercept and inspect auth tokens from your own network requests",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  },
+  "keywords": [
+    "browser-extension",
+    "chrome-extension",
+    "developer-tools",
+    "network-interceptor",
+    "auth-token",
+    "debugging"
+  ],
+  "author": "William Huang",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/william2809/browser-interceptor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/william2809/browser-interceptor/issues"
+  },
+  "homepage": "https://github.com/william2809/browser-interceptor#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
