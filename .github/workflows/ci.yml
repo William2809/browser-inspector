@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: matrix.node-version == '20.x'
+        with:
+          fail_ci_if_error: false
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for external network calls
+        run: |
+          echo "Checking for prohibited network calls..."
+          if grep -rE "(fetch\(|XMLHttpRequest|\.ajax\(|sendBeacon|WebSocket)" src/; then
+            echo "ERROR: Found external network calls in source code!"
+            echo "This extension must remain 100% local."
+            exit 1
+          fi
+          echo "No external network calls found."
+
+      - name: Check for analytics/telemetry
+        run: |
+          echo "Checking for analytics or telemetry..."
+          if grep -riE "(analytics|telemetry|tracking|ga\(|gtag)" src/; then
+            echo "ERROR: Found analytics/telemetry code!"
+            exit 1
+          fi
+          echo "No analytics or telemetry found."
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check manifest.json validity
+        run: |
+          echo "Validating manifest.json..."
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'))"
+          echo "manifest.json is valid JSON."
