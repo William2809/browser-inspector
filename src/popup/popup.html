@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browser Interceptor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Scan line overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="logo-text">INTERCEPTOR</span>
+        </div>
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span class="status-text">ACTIVE</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="settingsBtn" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="toggleBtn" title="Toggle capture">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="toggleIcon">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="10" y1="15" x2="10" y2="9"/>
+            <line x1="14" y1="15" x2="14" y2="9"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="captured">
+        <span class="tab-icon">◉</span>
+        Captured
+        <span class="tab-count" id="capturedCount">0</span>
+      </button>
+      <button class="tab" data-tab="apis">
+        <span class="tab-icon">⚡</span>
+        APIs
+        <span class="tab-count" id="apiCount">0</span>
+      </button>
+      <button class="tab" data-tab="history">
+        <span class="tab-icon">◷</span>
+        History
+      </button>
+      <button class="tab" data-tab="rules">
+        <span class="tab-icon">⚙</span>
+        Rules
+      </button>
+    </nav>
+
+    <!-- Main content area -->
+    <main class="content">
+      <!-- Captured data panel -->
+      <section class="panel active" id="capturedPanel">
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-bar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search tokens, domains...">
+            <button class="clear-search" id="clearSearch">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="filter-chips">
+            <button class="filter-chip" data-filter="all">
+              <span class="chip-dot"></span>
+              All
+              <span class="chip-count" id="countAll">0</span>
+            </button>
+            <button class="filter-chip bearer" data-filter="bearer">
+              <span class="chip-dot"></span>
+              Bearer
+              <span class="chip-count" id="countBearer">0</span>
+            </button>
+            <button class="filter-chip cookie" data-filter="cookie">
+              <span class="chip-dot"></span>
+              Cookie
+              <span class="chip-count" id="countCookie">0</span>
+            </button>
+            <button class="filter-chip query" data-filter="query-param">
+              <span class="chip-dot"></span>
+              Query
+              <span class="chip-count" id="countQuery">0</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-header">
+          <span class="panel-title">INTERCEPTED DATA</span>
+          <span class="panel-stats">Showing <strong id="showingCount">0</strong> of <strong id="totalCount">0</strong></span>
+          <button class="text-btn danger" id="clearAllBtn">Clear All</button>
+        </div>
+        <div class="data-list" id="capturedList">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <path d="M9 10h.01M15 10h.01M9.5 15.5s1.5 1 2.5 1 2.5-1 2.5-1"/>
+              </svg>
+            </div>
+            <p class="empty-text">No data captured yet</p>
+            <p class="empty-subtext">Browse sites with auth tokens to capture them</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- APIs panel -->
+      <section class="panel" id="apisPanel">
+        <div class="api-controls">
+          <div class="api-domain-selector">
+            <label for="apiDomainSelect">Domain:</label>
+            <select id="apiDomainSelect">
+              <option value="">Select domain...</option>
+            </select>
+          </div>
+          <div class="api-actions">
+            <button class="icon-btn export" id="exportApiBtn" title="Export current domain">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </button>
+            <button class="icon-btn export-all" id="exportAllApiBtn" title="Export all domains">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+                <circle cx="18" cy="5" r="3"/>
+              </svg>
+            </button>
+            <button class="text-btn danger" id="clearApiBtn">Clear</button>
+          </div>
+        </div>
+
+        <div class="api-stats" id="apiStats">
+          <span class="api-stat-empty">Select a domain to view stats</span>
+        </div>
+
+        <div class="api-search">
+          <input type="text" id="apiSearchInput" placeholder="Search endpoints, params...">
+        </div>
+
+        <div class="api-endpoint-list" id="apiEndpointList">
+          <div class="empty-state">
+            <p class="empty-text">No API requests tracked yet</p>
+            <p class="empty-subtext">Browse a website to capture its API calls</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- History panel -->
+      <section class="panel" id="historyPanel">
+        <div class="panel-header">
+          <span class="panel-title">CAPTURE HISTORY</span>
+          <button class="text-btn danger" id="clearHistoryBtn">Clear</button>
+        </div>
+        <div class="data-list" id="historyList">
+          <div class="empty-state">
+            <p class="empty-text">No history yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rules panel -->
+      <section class="panel" id="rulesPanel">
+        <div class="panel-header">
+          <span class="panel-title">CUSTOM RULES</span>
+          <button class="text-btn primary" id="addRuleBtn">+ Add Rule</button>
+        </div>
+        <div class="rules-list" id="rulesList">
+          <div class="rule-item builtin">
+            <div class="rule-info">
+              <span class="rule-name">Auth Token Handler</span>
+              <span class="rule-desc">Authorization, X-Auth-Token, API keys</span>
+            </div>
+            <span class="rule-badge builtin">BUILT-IN</span>
+          </div>
+          <div class="rule-item builtin">
+            <div class="rule-info">
+              <span class="rule-name">Cookie Handler</span>
+              <span class="rule-desc">Session cookies, auth cookies</span>
+            </div>
+            <span class="rule-badge builtin">BUILT-IN</span>
+          </div>
+          <div class="rule-item builtin">
+            <div class="rule-info">
+              <span class="rule-name">Query Param Handler</span>
+              <span class="rule-desc">api_key, token, access_token in URLs</span>
+            </div>
+            <span class="rule-badge builtin">BUILT-IN</span>
+          </div>
+        </div>
+
+        <!-- Add rule form (hidden by default) -->
+        <div class="add-rule-form" id="addRuleForm">
+          <div class="form-group">
+            <label>Rule Name</label>
+            <input type="text" id="ruleName" placeholder="my-api-token">
+          </div>
+          <div class="form-group">
+            <label>URL Pattern</label>
+            <input type="text" id="ruleUrl" placeholder="*://api.example.com/*">
+          </div>
+          <div class="form-group">
+            <label>Extract From</label>
+            <select id="ruleExtractFrom">
+              <option value="header">Header</option>
+              <option value="cookie">Cookie</option>
+              <option value="query">Query Param</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Key Name</label>
+            <input type="text" id="ruleKey" placeholder="X-Custom-Token">
+          </div>
+          <div class="form-actions">
+            <button class="btn secondary" id="cancelRuleBtn">Cancel</button>
+            <button class="btn primary" id="saveRuleBtn">Save Rule</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+      <span class="toast-icon">✓</span>
+      <span class="toast-message">Copied to clipboard</span>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
