@@ -77,7 +77,7 @@ async function handleRequest(details) {
 
   // Track API requests (XHR/fetch) grouped by page domain
   if (details.type === 'xmlhttprequest' && details.tabId > 0) {
-    handleApiTracking(details);
+    handleApiMonitoring(details);
   }
 
   try {
@@ -180,14 +180,14 @@ function showRotationNotification(result, storedData) {
   });
 }
 
-// API Tracking - track XHR/fetch requests grouped by page domain
-async function handleApiTracking(details) {
+// API Monitoring - record XHR/fetch requests grouped by page domain
+async function handleApiMonitoring(details) {
   try {
     // Get the tab to find the page URL
     const tab = await chrome.tabs.get(details.tabId);
     if (!tab || !tab.url) return;
 
-    // Skip tracking for extension pages, new tabs, etc.
+    // Skip recording for extension pages, new tabs, etc.
     if (tab.url.startsWith('chrome://') ||
         tab.url.startsWith('chrome-extension://') ||
         tab.url.startsWith('about:') ||
