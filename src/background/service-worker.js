@@ -77,9 +77,7 @@ async function handleRequest(details) {
 
   // Track API requests (XHR/fetch) grouped by page domain
   if (details.type === 'xmlhttprequest' && details.tabId > 0) {
-    handleApiTracking(details).catch(err => {
-      // Silently fail - API tracking is non-critical
-    });
+    handleApiTracking(details);
   }
 
   try {

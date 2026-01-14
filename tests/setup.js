@@ -48,7 +48,7 @@ global.chrome = {
     }
   },
   runtime: {
-    sendMessage: jest.fn(),
+    sendMessage: jest.fn(() => Promise.resolve()),
     onMessage: {
       addListener: jest.fn()
     },
@@ -61,6 +61,9 @@ global.chrome = {
   },
   notifications: {
     create: jest.fn()
+  },
+  tabs: {
+    get: jest.fn()
   }
 };
 

@@ -11,10 +11,17 @@ import {
   addToExpiredTokens,
   clearExpiredTokens,
   getHistory,
+  addToHistory,
   clearHistory,
   getConfig,
   setConfig,
-  updateConfig
+  updateConfig,
+  shouldCaptureDomain,
+  getApiTracker,
+  getApiTrackerForDomain,
+  getTrackedDomains,
+  trackApiRequest,
+  extractRootDomain
 } from '../src/lib/storage.js';
 
 describe('Storage Module', () => {
@@ -286,6 +293,18 @@ describe('Storage Module', () => {
 
       expect(history).toEqual([]);
     });
+
+    it('should record rotation events in history', async () => {
+      await addToHistory('key-rot', { value: 'tok', type: 'auth-token' }, true);
+      const history = await getHistory();
+      expect(history[0].event).toBe('rotation');
+    });
+
+    it('should record capture events by default', async () => {
+      await addToHistory('key-cap', { value: 'tok', type: 'auth-token' });
+      const history = await getHistory();
+      expect(history[0].event).toBe('capture');
+    });
   });
 
   describe('Config', () => {
@@ -321,6 +340,317 @@ describe('Storage Module', () => {
 
       expect(updated.enabled).toBe(true);
       expect(updated.notifications).toBe(false);
+    });
+  });
+
+  describe('Domain filtering', () => {
+    it('should block domains on the blocklist', () => {
+      const config = {
+        domainAllowlist: [],
+        domainBlocklist: ['ads.example.com', '*.tracker.com']
+      };
+
+      expect(shouldCaptureDomain('ads.example.com', config)).toBe(false);
+      expect(shouldCaptureDomain('api.tracker.com', config)).toBe(false);
+      expect(shouldCaptureDomain('good.com', config)).toBe(true);
+    });
+
+    it('should allow domains on the allowlist', () => {
+      const config = {
+        domainAllowlist: ['api.myapp.com', '*.service.com'],
+        domainBlocklist: []
+      };
+
+      expect(shouldCaptureDomain('api.myapp.com', config)).toBe(true);
+      expect(shouldCaptureDomain('sub.service.com', config)).toBe(true);
+      expect(shouldCaptureDomain('other.com', config)).toBe(false);
+    });
+
+    it('should return false for missing domains and empty patterns', () => {
+      const config = {
+        domainAllowlist: [],
+        domainBlocklist: ['']
+      };
+
+      expect(shouldCaptureDomain('', config)).toBe(false);
+      expect(shouldCaptureDomain(null, config)).toBe(false);
+    });
+
+    it('should ignore null blocklist patterns', () => {
+      const config = {
+        domainAllowlist: [],
+        domainBlocklist: [null]
+      };
+
+      expect(shouldCaptureDomain('example.com', config)).toBe(true);
+    });
+
+    it('should default to allow when allowlist and blocklist are omitted', () => {
+      expect(shouldCaptureDomain('example.com', {})).toBe(true);
+    });
+  });
+
+  describe('API Tracker edge cases', () => {
+    it('should return null for unknown domain', async () => {
+      const result = await getApiTrackerForDomain('missing.com');
+      expect(result).toBeNull();
+    });
+
+    it('should return data for tracked domain', async () => {
+      setMockStorage({
+        apiTracker: {
+          'example.com': { displayName: 'example.com', totalRequests: 1, endpoints: {} }
+        }
+      });
+
+      const result = await getApiTrackerForDomain('example.com');
+      expect(result.displayName).toBe('example.com');
+    });
+
+    it('should sort tracked domains by lastVisited', async () => {
+      setMockStorage({
+        apiTracker: {
+          'a.com': { displayName: 'a.com', lastVisited: 10, totalRequests: 1, endpoints: {}, stats: { uniqueEndpoints: 0 } },
+          'b.com': { displayName: 'b.com', lastVisited: 20, totalRequests: 1, endpoints: {}, stats: { uniqueEndpoints: 0 } }
+        }
+      });
+
+      const domains = await getTrackedDomains();
+      expect(domains[0].domain).toBe('b.com');
+      expect(domains[1].domain).toBe('a.com');
+    });
+
+    it('should skip invalid URLs', async () => {
+      await trackApiRequest('example.com', { url: 'http://', method: 'GET', requestHeaders: [] });
+      const tracker = await getApiTracker();
+      expect(tracker).toEqual({});
+    });
+
+    it('should normalize long alphanumeric path segments', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items/abcdefghijklmnopqrstuvwx1234',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.normalizedPath).toBe('/v1/items/*');
+    });
+
+    it('should detect basic auth', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: [{ name: 'Authorization', value: 'Basic dGVzdDpwYXNz' }]
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.authType).toBe('basic');
+    });
+
+    it('should handle missing request headers', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET'
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.hasAuth).toBe(false);
+    });
+
+    it('should treat missing auth header values as token auth', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: [{ name: 'Authorization' }]
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.authType).toBe('token');
+    });
+
+    it('should ignore non-auth headers', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: [{ name: 'Content-Type', value: 'application/json' }]
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.hasAuth).toBe(false);
+    });
+
+    it('should detect token auth when not bearer or basic', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: [{ name: 'X-API-Key', value: 'token123' }]
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.authType).toBe('token');
+    });
+
+    it('should update auth info for existing endpoint', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items',
+        method: 'GET',
+        requestHeaders: [{ name: 'Authorization', value: 'Bearer token' }]
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.hasAuth).toBe(true);
+      expect(endpoint.authType).toBe('bearer');
+    });
+
+    it('should backfill exampleUrls when missing', async () => {
+      setMockStorage({
+        apiTracker: {
+          'example.com': {
+            displayName: 'example.com',
+            lastVisited: 1,
+            totalRequests: 1,
+            endpoints: {
+              'api.example.com::/v1/items::GET': {
+                apiDomain: 'api.example.com',
+                path: '/v1/items',
+                normalizedPath: '/v1/items',
+                method: 'GET',
+                count: 1,
+                firstSeen: 1,
+                lastSeen: 1,
+                exampleUrl: 'https://api.example.com/v1/items'
+              }
+            },
+            stats: { uniqueEndpoints: 1, byApiDomain: { 'api.example.com': 1 }, byMethod: { GET: 1 } }
+          }
+        }
+      });
+
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items?page=2',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.exampleUrls.length).toBeGreaterThan(1);
+    });
+
+    it('should remove oldest endpoint when limit is exceeded', async () => {
+      const endpoints = {};
+      for (let i = 0; i < 200; i++) {
+        endpoints[`api.example.com::/v1/items/${i}::GET`] = {
+          apiDomain: 'api.example.com',
+          path: `/v1/items/${i}`,
+          normalizedPath: `/v1/items/${i}`,
+          method: 'GET',
+          count: 1,
+          firstSeen: i,
+          lastSeen: i,
+          exampleUrl: `https://api.example.com/v1/items/${i}`,
+          exampleUrls: [`https://api.example.com/v1/items/${i}`]
+        };
+      }
+
+      setMockStorage({
+        apiTracker: {
+          'example.com': {
+            displayName: 'example.com',
+            lastVisited: 200,
+            totalRequests: 200,
+            endpoints,
+            stats: { uniqueEndpoints: 200, byApiDomain: { 'api.example.com': 200 }, byMethod: { GET: 200 } }
+          }
+        }
+      });
+
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/new-item',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      const tracker = await getApiTracker();
+      expect(Object.keys(tracker['example.com'].endpoints).length).toBe(200);
+      expect(tracker['example.com'].endpoints['api.example.com::/v1/items/0::GET']).toBeUndefined();
+    });
+
+    it('should remove oldest domain when domain limit is exceeded', async () => {
+      const tracker = {};
+      for (let i = 0; i < 50; i++) {
+        tracker[`domain-${i}.com`] = {
+          displayName: `domain-${i}.com`,
+          lastVisited: i,
+          totalRequests: 1,
+          endpoints: {},
+          stats: { uniqueEndpoints: 0, byApiDomain: {}, byMethod: {} }
+        };
+      }
+
+      setMockStorage({ apiTracker: tracker });
+
+      await trackApiRequest('new-domain.com', {
+        url: 'https://api.new-domain.com/v1/items',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      const updated = await getApiTracker();
+      expect(Object.keys(updated).length).toBe(50);
+      expect(updated['domain-0.com']).toBeUndefined();
+      expect(updated['new-domain.com']).toBeDefined();
+    });
+
+    it('should handle empty root domains', () => {
+      expect(extractRootDomain('')).toBe('');
+    });
+
+    it('should collect repeated query parameter examples', async () => {
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com/v1/items?q=1&q=2&q=2&q=3&q=4&q=5&q=6',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      const tracker = await getApiTracker();
+      const endpoint = Object.values(tracker['example.com'].endpoints)[0];
+      expect(endpoint.queryParamExamples.q.length).toBeLessThanOrEqual(5);
+      expect(endpoint.queryParamExamples.q).toContain('1');
+    });
+
+    it('should normalize empty paths', async () => {
+      const OriginalURL = global.URL;
+
+      global.URL = class MockURL {
+        constructor() {
+          this.hostname = 'api.example.com';
+          this.pathname = '';
+          this.searchParams = new OriginalURL('https://api.example.com').searchParams;
+        }
+      };
+
+      await trackApiRequest('example.com', {
+        url: 'https://api.example.com',
+        method: 'GET',
+        requestHeaders: []
+      });
+
+      global.URL = OriginalURL;
     });
   });
 });
