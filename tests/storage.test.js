@@ -1,4 +1,4 @@
-// Browser Interceptor - Storage Module Tests
+// Browser Inspector - Storage Module Tests
 // Tests for 100% local storage operations
 
 import {

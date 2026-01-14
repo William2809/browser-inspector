@@ -1,4 +1,4 @@
-// Browser Interceptor - API Tracker Tests
+// Browser Inspector - API Tracker Tests
 // Tests for API request tracking and storage
 
 import { jest } from '@jest/globals';

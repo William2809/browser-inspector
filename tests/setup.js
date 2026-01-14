@@ -1,4 +1,4 @@
-// Browser Interceptor - Test Setup
+// Browser Inspector - Test Setup
 // Mock Chrome Extension APIs for testing
 
 import { jest } from '@jest/globals';
