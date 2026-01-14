@@ -314,7 +314,8 @@ describe('Storage Module', () => {
       expect(config).toMatchObject({
         enabled: true,
         notifications: true,
-        autoCapture: true
+        autoCapture: true,
+        theme: 'dark'
       });
     });
 

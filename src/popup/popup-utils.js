@@ -59,3 +59,10 @@ export function highlightMatches(text, query) {
   const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
   return text.replace(regex, '<mark>$1</mark>');
 }
+
+// Apply theme to the document root
+export function applyTheme(theme) {
+  const normalized = theme === 'light' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = normalized;
+  return normalized;
+}

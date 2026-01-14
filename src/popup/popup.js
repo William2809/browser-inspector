@@ -1,6 +1,6 @@
 // Browser Interceptor Popup - Main controller that orchestrates UI modules
 
-import { sendMessage, showToast } from './popup-utils.js';
+import { applyTheme, sendMessage, showToast } from './popup-utils.js';
 import {
   createEmptyState,
   createNoResultsHTML,
@@ -62,6 +62,8 @@ const elements = {
   ruleExtractFrom: document.getElementById('ruleExtractFrom'),
   ruleKey: document.getElementById('ruleKey'),
   settingsBtn: document.getElementById('settingsBtn'),
+  themeToggleBtn: document.getElementById('themeToggleBtn'),
+  themeToggleIcon: document.getElementById('themeToggleIcon'),
   toast: document.getElementById('toast'),
   // API Tracker elements
   apiCount: document.getElementById('apiCount'),
@@ -103,6 +105,9 @@ async function loadData() {
     ]);
 
     isEnabled = config.enabled !== false;
+    config.theme = config.theme || 'dark';
+    applyTheme(config.theme);
+    updateThemeToggle(config.theme);
     updateStatusUI(elements, isEnabled);
   } catch (error) {
     console.error('Failed to load data:', error);
@@ -133,6 +138,10 @@ function setupEventListeners() {
   elements.settingsBtn.addEventListener('click', () => {
     showToast(elements, 'Settings coming soon');
   });
+
+  if (elements.themeToggleBtn) {
+    elements.themeToggleBtn.addEventListener('click', handleThemeToggle);
+  }
 
   // API Tracker event listeners
   if (elements.apiSearchInput) {
@@ -176,6 +185,36 @@ async function handleToggle() {
   await toggleCapture(isEnabled);
   updateStatusUI(elements, isEnabled);
   showToast(elements, isEnabled ? 'Capture enabled' : 'Capture disabled');
+}
+
+async function handleThemeToggle() {
+  const nextTheme = config.theme === 'light' ? 'dark' : 'light';
+  config = { ...config, theme: nextTheme };
+  applyTheme(nextTheme);
+  updateThemeToggle(nextTheme);
+  try {
+    await sendMessage({ type: 'SET_CONFIG', config });
+    showToast(elements, `${nextTheme === 'light' ? 'Light' : 'Dark'} theme enabled`);
+  } catch (error) {
+    console.error('Failed to update theme:', error);
+    showToast(elements, 'Theme update failed');
+  }
+}
+
+function updateThemeToggle(theme) {
+  if (!elements.themeToggleBtn || !elements.themeToggleIcon) return;
+  const nextTheme = theme === 'light' ? 'dark' : 'light';
+  const label = `Switch to ${nextTheme} theme`;
+  elements.themeToggleBtn.setAttribute('title', label);
+  elements.themeToggleBtn.setAttribute('aria-label', label);
+  elements.themeToggleBtn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+
+  const sunIcon = `
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+  `;
+  const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+  elements.themeToggleIcon.innerHTML = nextTheme === 'light' ? sunIcon : moonIcon;
 }
 
 function handleSearch(e) {

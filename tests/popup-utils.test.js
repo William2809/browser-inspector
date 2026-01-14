@@ -8,7 +8,8 @@ import {
   getTimeAgo,
   formatTime,
   escapeRegex,
-  highlightMatches
+  highlightMatches,
+  applyTheme
 } from '../src/popup/popup-utils.js';
 
 describe('popup-utils', () => {
@@ -76,5 +77,13 @@ describe('popup-utils', () => {
   it('should highlight matches when query is provided', () => {
     expect(highlightMatches('Token ABC', 'abc')).toBe('Token <mark>ABC</mark>');
     expect(highlightMatches('Token ABC', '')).toBe('Token ABC');
+  });
+
+  it('should apply themes to the document root', () => {
+    document.documentElement.dataset.theme = 'dark';
+    expect(applyTheme('light')).toBe('light');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(applyTheme('unknown')).toBe('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
   });
 });

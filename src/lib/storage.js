@@ -175,6 +175,7 @@ function getDefaultConfig() {
     notifications: true,
     notifyOnRotation: true,
     autoCapture: true,
+    theme: 'dark',
     rules: [],
     // Domain filtering - empty means capture all
     // Add domains like 'api.myapp.com' to only capture from those
