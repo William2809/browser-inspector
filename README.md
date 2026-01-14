@@ -44,13 +44,17 @@ A **100% local** developer tool for intercepting and inspecting auth tokens from
 
 ## Installation
 
-### From Source
+### Load Unpacked (Chrome/Edge/Brave)
 
 1. Clone this repository
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable "Developer mode" (toggle in top right)
+2. Open the extensions page:
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+   - Brave: `brave://extensions/`
+3. Enable "Developer mode" (toggle in the top right)
 4. Click "Load unpacked"
-5. Select the project directory
+5. Select the project directory (the folder that contains `manifest.json`)
+6. Optional: Pin the extension from the toolbar
 
 ### Build & Test
 

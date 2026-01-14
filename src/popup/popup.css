@@ -1,6 +1,7 @@
 /* Browser Interceptor - Developer Tool Aesthetic */
 
 :root {
+  color-scheme: dark;
   /* Core palette - deep space with electric cyan */
   --bg-primary: #0a0e14;
   --bg-secondary: #111921;
@@ -31,6 +32,46 @@
   --border-medium: rgba(255, 255, 255, 0.1);
   --border-accent: rgba(0, 240, 255, 0.3);
 
+  /* Theme accents */
+  --bg-gradient-top: rgba(0, 240, 255, 0.03);
+  --bg-gradient-bottom: rgba(124, 58, 237, 0.03);
+  --scanline-color: rgba(0, 0, 0, 0.12);
+  --chip-count-bg: rgba(255, 255, 255, 0.1);
+  --chip-active-bg: rgba(0, 240, 255, 0.15);
+  --chip-cookie-bg: rgba(124, 58, 237, 0.15);
+  --chip-query-bg: rgba(244, 114, 182, 0.15);
+  --focus-ring: rgba(0, 240, 255, 0.1);
+  --highlight-bg: rgba(0, 240, 255, 0.3);
+  --rotation-bg: rgba(245, 158, 11, 0.15);
+  --rotation-border: rgba(245, 158, 11, 0.3);
+  --rotation-shadow-start: rgba(245, 158, 11, 0.3);
+  --rotation-shadow-end: rgba(245, 158, 11, 0.2);
+  --rule-badge-bg: rgba(0, 240, 255, 0.1);
+  --rule-badge-border: rgba(0, 240, 255, 0.2);
+  --btn-primary-hover: #00d8e6;
+  --toast-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+  --menu-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 240, 255, 0.1);
+  --method-get-bg: rgba(0, 212, 170, 0.1);
+  --method-get-border: rgba(0, 212, 170, 0.3);
+  --method-post-bg: rgba(0, 240, 255, 0.1);
+  --method-post-border: rgba(0, 240, 255, 0.3);
+  --method-put-bg: rgba(245, 158, 11, 0.1);
+  --method-put-border: rgba(245, 158, 11, 0.3);
+  --method-delete-bg: rgba(239, 68, 68, 0.1);
+  --method-delete-border: rgba(239, 68, 68, 0.3);
+  --method-patch-bg: rgba(124, 58, 237, 0.1);
+  --method-patch-border: rgba(124, 58, 237, 0.3);
+  --endpoint-get-bg: rgba(0, 212, 170, 0.15);
+  --endpoint-post-bg: rgba(0, 240, 255, 0.15);
+  --endpoint-put-bg: rgba(245, 158, 11, 0.15);
+  --endpoint-delete-bg: rgba(239, 68, 68, 0.15);
+  --endpoint-patch-bg: rgba(124, 58, 237, 0.15);
+  --status-active-bg: rgba(0, 212, 170, 0.1);
+  --status-active-border: rgba(0, 212, 170, 0.2);
+  --status-inactive-bg: rgba(239, 68, 68, 0.1);
+  --status-inactive-border: rgba(239, 68, 68, 0.2);
+  --status-inactive-shadow: rgba(239, 68, 68, 0.5);
+
   /* Sizing */
   --popup-width: 400px;
   --popup-height: 580px;
@@ -40,6 +81,67 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #f7f9fc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #eef2f7;
+  --bg-elevated: #e3eaf2;
+  --accent-primary: #0ea5e9;
+  --accent-secondary: #10b981;
+  --accent-tertiary: #7c3aed;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  --accent-query: #ec4899;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+  --glow-primary: rgba(14, 165, 233, 0.35);
+  --glow-secondary: rgba(16, 185, 129, 0.3);
+  --glow-tertiary: rgba(124, 58, 237, 0.25);
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-medium: rgba(15, 23, 42, 0.14);
+  --border-accent: rgba(14, 165, 233, 0.35);
+  --bg-gradient-top: rgba(14, 165, 233, 0.06);
+  --bg-gradient-bottom: rgba(124, 58, 237, 0.04);
+  --scanline-color: rgba(15, 23, 42, 0.04);
+  --chip-count-bg: rgba(15, 23, 42, 0.06);
+  --chip-active-bg: rgba(14, 165, 233, 0.14);
+  --chip-cookie-bg: rgba(124, 58, 237, 0.14);
+  --chip-query-bg: rgba(236, 72, 153, 0.14);
+  --focus-ring: rgba(14, 165, 233, 0.16);
+  --highlight-bg: rgba(14, 165, 233, 0.25);
+  --rotation-bg: rgba(245, 158, 11, 0.16);
+  --rotation-border: rgba(245, 158, 11, 0.35);
+  --rotation-shadow-start: rgba(245, 158, 11, 0.35);
+  --rotation-shadow-end: rgba(245, 158, 11, 0.2);
+  --rule-badge-bg: rgba(14, 165, 233, 0.12);
+  --rule-badge-border: rgba(14, 165, 233, 0.25);
+  --btn-primary-hover: #0284c7;
+  --toast-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
+  --menu-shadow: 0 12px 30px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(14, 165, 233, 0.1);
+  --method-get-bg: rgba(16, 185, 129, 0.12);
+  --method-get-border: rgba(16, 185, 129, 0.28);
+  --method-post-bg: rgba(14, 165, 233, 0.12);
+  --method-post-border: rgba(14, 165, 233, 0.28);
+  --method-put-bg: rgba(245, 158, 11, 0.12);
+  --method-put-border: rgba(245, 158, 11, 0.28);
+  --method-delete-bg: rgba(239, 68, 68, 0.12);
+  --method-delete-border: rgba(239, 68, 68, 0.28);
+  --method-patch-bg: rgba(124, 58, 237, 0.12);
+  --method-patch-border: rgba(124, 58, 237, 0.28);
+  --endpoint-get-bg: rgba(16, 185, 129, 0.14);
+  --endpoint-post-bg: rgba(14, 165, 233, 0.14);
+  --endpoint-put-bg: rgba(245, 158, 11, 0.14);
+  --endpoint-delete-bg: rgba(239, 68, 68, 0.14);
+  --endpoint-patch-bg: rgba(124, 58, 237, 0.14);
+  --status-active-bg: rgba(16, 185, 129, 0.12);
+  --status-active-border: rgba(16, 185, 129, 0.25);
+  --status-inactive-bg: rgba(239, 68, 68, 0.12);
+  --status-inactive-border: rgba(239, 68, 68, 0.25);
+  --status-inactive-shadow: rgba(239, 68, 68, 0.35);
 }
 
 * {
@@ -68,8 +170,8 @@ body {
   height: 100%;
   position: relative;
   background:
-    radial-gradient(ellipse at top right, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom left, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at top right, var(--bg-gradient-top) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, var(--bg-gradient-bottom) 0%, transparent 50%),
     var(--bg-primary);
 }
 
@@ -82,8 +184,8 @@ body {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 4px
+    var(--scanline-color) 2px,
+    var(--scanline-color) 4px
   );
   opacity: 0.25;
   z-index: 100;
@@ -152,8 +254,8 @@ body {
   align-items: center;
   gap: 5px;
   padding: 3px 8px;
-  background: rgba(0, 212, 170, 0.1);
-  border: 1px solid rgba(0, 212, 170, 0.2);
+  background: var(--status-active-bg);
+  border: 1px solid var(--status-active-border);
   border-radius: 20px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
@@ -163,8 +265,8 @@ body {
 }
 
 .status-badge.inactive {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
+  background: var(--status-inactive-bg);
+  border-color: var(--status-inactive-border);
   color: var(--accent-danger);
 }
 
@@ -179,7 +281,7 @@ body {
 
 .status-badge.inactive .status-dot {
   background: var(--accent-danger);
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 8px var(--status-inactive-shadow);
   animation: none;
 }
 
@@ -330,7 +432,7 @@ body {
 
 .search-box:focus-within {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .search-box svg {
@@ -408,25 +510,25 @@ body {
 }
 
 .filter-chip.active {
-  background: rgba(0, 240, 255, 0.15);
+  background: var(--chip-active-bg);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
 
 .filter-chip.active.bearer {
-  background: rgba(0, 240, 255, 0.15);
+  background: var(--chip-active-bg);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
 
 .filter-chip.active.cookie {
-  background: rgba(124, 58, 237, 0.15);
+  background: var(--chip-cookie-bg);
   border-color: var(--accent-tertiary);
   color: var(--accent-tertiary);
 }
 
 .filter-chip.active.query {
-  background: rgba(244, 114, 182, 0.15);
+  background: var(--chip-query-bg);
   border-color: var(--accent-query);
   color: var(--accent-query);
 }
@@ -440,7 +542,7 @@ body {
 
 .filter-chip .chip-count {
   padding: 1px 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--chip-count-bg);
   border-radius: 8px;
   font-size: 8px;
 }
@@ -731,7 +833,7 @@ body {
 }
 
 .data-item-value mark {
-  background: rgba(0, 240, 255, 0.3);
+  background: var(--highlight-bg);
   color: var(--accent-primary);
   padding: 0 2px;
   border-radius: 2px;
@@ -759,8 +861,8 @@ body {
   align-items: center;
   gap: 3px;
   padding: 2px 6px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: var(--rotation-bg);
+  border: 1px solid var(--rotation-border);
   border-radius: 10px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
@@ -772,15 +874,15 @@ body {
 
 @keyframes rotation-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 0 0 var(--rotation-shadow-start);
   }
   50% {
-    box-shadow: 0 0 8px 2px rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 8px 2px var(--rotation-shadow-end);
   }
 }
 
 .data-item.rotated {
-  border-color: rgba(245, 158, 11, 0.3);
+  border-color: var(--rotation-border);
 }
 
 .data-item.rotated::after {
@@ -898,9 +1000,9 @@ body {
   letter-spacing: 0.05em;
   padding: 3px 6px;
   border-radius: 4px;
-  background: rgba(0, 240, 255, 0.1);
+  background: var(--rule-badge-bg);
   color: var(--accent-primary);
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  border: 1px solid var(--rule-badge-border);
 }
 
 .rule-badge.builtin {
@@ -959,7 +1061,7 @@ body {
 .form-group select:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .form-group input::placeholder {
@@ -998,7 +1100,7 @@ body {
 }
 
 .btn.primary:hover {
-  background: #00d8e6;
+  background: var(--btn-primary-hover);
   box-shadow: 0 0 20px var(--glow-primary);
 }
 
@@ -1028,7 +1130,7 @@ body {
   border-radius: var(--radius-md);
   font-size: 11px;
   font-weight: 500;
-  box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+  box-shadow: var(--toast-shadow);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 200;
@@ -1048,7 +1150,7 @@ body {
   background: var(--bg-secondary);
   border: 1px solid var(--border-accent);
   border-radius: var(--radius-md);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 240, 255, 0.1);
+  box-shadow: var(--menu-shadow);
   padding: 4px;
   min-width: 160px;
   z-index: 300;
@@ -1141,6 +1243,11 @@ body {
   transition: all 0.2s ease;
 }
 
+:root[data-theme="light"] .form-group select,
+:root[data-theme="light"] .api-domain-selector select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
 .api-domain-selector select:hover {
   border-color: var(--border-accent);
 }
@@ -1148,7 +1255,7 @@ body {
 .api-domain-selector select:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .api-domain-selector select:disabled {
@@ -1238,32 +1345,32 @@ body {
 
 .method-badge.get {
   color: var(--accent-secondary);
-  border-color: rgba(0, 212, 170, 0.3);
-  background: rgba(0, 212, 170, 0.1);
+  border-color: var(--method-get-border);
+  background: var(--method-get-bg);
 }
 
 .method-badge.post {
   color: var(--accent-primary);
-  border-color: rgba(0, 240, 255, 0.3);
-  background: rgba(0, 240, 255, 0.1);
+  border-color: var(--method-post-border);
+  background: var(--method-post-bg);
 }
 
 .method-badge.put {
   color: var(--accent-warning);
-  border-color: rgba(245, 158, 11, 0.3);
-  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--method-put-border);
+  background: var(--method-put-bg);
 }
 
 .method-badge.delete {
   color: var(--accent-danger);
-  border-color: rgba(239, 68, 68, 0.3);
-  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--method-delete-border);
+  background: var(--method-delete-bg);
 }
 
 .method-badge.patch {
   color: var(--accent-tertiary);
-  border-color: rgba(124, 58, 237, 0.3);
-  background: rgba(124, 58, 237, 0.1);
+  border-color: var(--method-patch-border);
+  background: var(--method-patch-bg);
 }
 
 .api-search {
@@ -1287,7 +1394,7 @@ body {
 .api-search input:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .api-search input::placeholder {
@@ -1351,27 +1458,27 @@ body {
 
 .endpoint-method.get {
   color: var(--accent-secondary);
-  background: rgba(0, 212, 170, 0.15);
+  background: var(--endpoint-get-bg);
 }
 
 .endpoint-method.post {
   color: var(--accent-primary);
-  background: rgba(0, 240, 255, 0.15);
+  background: var(--endpoint-post-bg);
 }
 
 .endpoint-method.put {
   color: var(--accent-warning);
-  background: rgba(245, 158, 11, 0.15);
+  background: var(--endpoint-put-bg);
 }
 
 .endpoint-method.delete {
   color: var(--accent-danger);
-  background: rgba(239, 68, 68, 0.15);
+  background: var(--endpoint-delete-bg);
 }
 
 .endpoint-method.patch {
   color: var(--accent-tertiary);
-  background: rgba(124, 58, 237, 0.15);
+  background: var(--endpoint-patch-bg);
 }
 
 .endpoint-path {
