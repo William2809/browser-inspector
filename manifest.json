@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Browser Interceptor",
+  "name": "Browser Inspector",
   "version": "1.0.0",
   "description": "Local-only developer tool to intercept and inspect auth tokens from your own network requests. No data is sent externally.",
   "permissions": [

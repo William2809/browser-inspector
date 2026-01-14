@@ -1,4 +1,4 @@
-// Browser Interceptor - Handler Tests
+// Browser Inspector - Handler Tests
 // Tests for request interception handlers
 
 import { jest } from '@jest/globals';

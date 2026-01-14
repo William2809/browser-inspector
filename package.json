@@ -1,5 +1,5 @@
 {
-  "name": "browser-interceptor",
+  "name": "browser-inspector",
   "version": "1.0.0",
   "description": "Local-only developer tool to intercept and inspect auth tokens from your own network requests",
   "type": "module",
@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/william2809/browser-interceptor.git"
+    "url": "git+https://github.com/william2809/browser-inspector.git"
   },
   "bugs": {
-    "url": "https://github.com/william2809/browser-interceptor/issues"
+    "url": "https://github.com/william2809/browser-inspector/issues"
   },
-  "homepage": "https://github.com/william2809/browser-interceptor#readme",
+  "homepage": "https://github.com/william2809/browser-inspector#readme",
   "engines": {
     "node": ">=18.0.0"
   }

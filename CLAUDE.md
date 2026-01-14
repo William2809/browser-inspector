@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Browser Interceptor is a Chrome Extension (Manifest V3) that intercepts network requests to extract auth tokens for local development use. **All data stays 100% local** - stored only in `chrome.storage.local` with no external network calls.
+Browser Inspector is a Chrome Extension (Manifest V3) that intercepts network requests to extract auth tokens for local development use. **All data stays 100% local** - stored only in `chrome.storage.local` with no external network calls.
 
 ## Commands
 

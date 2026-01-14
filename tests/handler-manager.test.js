@@ -1,4 +1,4 @@
-// Browser Interceptor - Handler Manager Tests
+// Browser Inspector - Handler Manager Tests
 
 import { jest } from '@jest/globals';
 import { HandlerManager } from '../src/handlers/index.js';

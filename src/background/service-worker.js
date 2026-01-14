@@ -1,4 +1,4 @@
-// Browser Interceptor - Service Worker for request interception
+// Browser Inspector - Service Worker for request interception
 // 100% LOCAL - No data is sent externally
 
 import { HandlerManager } from '../handlers/index.js';
@@ -31,7 +31,7 @@ let isEnabled = true;
 
 // Initialize on startup
 async function initialize() {
-  console.log('[Browser Interceptor] Initializing...');
+  console.log('[Browser Inspector] Initializing...');
 
   const config = await getConfig();
   isEnabled = config.enabled !== false;
@@ -42,7 +42,7 @@ async function initialize() {
     customRules: config.rules || []
   });
 
-  console.log('[Browser Interceptor] Initialized with handlers:', handlerManager.getCapabilities());
+  console.log('[Browser Inspector] Initialized with handlers:', handlerManager.getCapabilities());
 }
 
 // Set up request listener
@@ -110,7 +110,7 @@ async function handleRequest(details) {
       }
     }
   } catch (error) {
-    console.error('[Browser Interceptor] Error processing request:', error);
+    console.error('[Browser Inspector] Error processing request:', error);
   }
 }
 
@@ -161,7 +161,7 @@ function showNotification(result) {
   chrome.notifications.create({
     type: 'basic',
     iconUrl: chrome.runtime.getURL('assets/icon-128.png'),
-    title: 'Browser Interceptor',
+    title: 'Browser Inspector',
     message: `Captured ${result.displayName} from ${domain}`,
     priority: 0
   });

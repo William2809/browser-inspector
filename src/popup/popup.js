@@ -1,4 +1,4 @@
-// Browser Interceptor Popup - Main controller that orchestrates UI modules
+// Browser Inspector Popup - Main controller that orchestrates UI modules
 
 import { applyTheme, sendMessage, showToast } from './popup-utils.js';
 import {

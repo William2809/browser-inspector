@@ -1,6 +1,6 @@
-# Browser Interceptor
+# Browser Inspector
 
-[![CI](https://github.com/william2809/browser-interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/william2809/browser-interceptor/actions/workflows/ci.yml)
+[![CI](https://github.com/william2809/browser-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/william2809/browser-inspector/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Security Analysis](https://img.shields.io/badge/security-audited-brightgreen)](SECURITY.md)
 
@@ -39,7 +39,7 @@ A **100% local** developer tool for intercepting and inspecting auth tokens from
 
 ## Screenshots
 
-![Browser Interceptor popup UI](assets/screenshots/popup-ui.png)
+![Browser Inspector popup UI](assets/screenshots/popup-ui.png)
 ![Rules and settings tab](assets/screenshots/rules-ui.png)
 
 ## Installation
@@ -107,7 +107,7 @@ Add custom extraction rules for your specific APIs:
 ## Project Structure
 
 ```
-browser-interceptor/
+browser-inspector/
 ├── manifest.json          # Extension manifest (MV3)
 ├── src/
 │   ├── background/

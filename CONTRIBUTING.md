@@ -1,6 +1,6 @@
-# Contributing to Browser Interceptor
+# Contributing to Browser Inspector
 
-Thank you for your interest in contributing to Browser Interceptor! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Browser Inspector! This document provides guidelines and instructions for contributing.
 
 ## Code of Conduct
 
@@ -19,8 +19,8 @@ By participating in this project, you agree to maintain a respectful and inclusi
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/browser-interceptor.git
-   cd browser-interceptor
+   git clone https://github.com/YOUR_USERNAME/browser-inspector.git
+   cd browser-inspector
    ```
 3. Install dependencies:
    ```bash
@@ -49,7 +49,7 @@ npm run test:coverage
 
 ### Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/william2809/browser-interceptor/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/william2809/browser-inspector/issues)
 2. If not, create a new issue using the bug report template
 3. Include:
    - Clear description of the bug
@@ -152,4 +152,4 @@ If you're unsure whether a change violates these guidelines, please ask in your 
 
 Feel free to open an issue for any questions about contributing.
 
-Thank you for helping make Browser Interceptor better!
+Thank you for helping make Browser Inspector better!

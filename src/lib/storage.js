@@ -1,4 +1,4 @@
-// Browser Interceptor - Storage Manager
+// Browser Inspector - Storage Manager
 // 100% LOCAL - All data stored in chrome.storage.local only
 
 const STORAGE_KEYS = {
