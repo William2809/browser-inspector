@@ -77,7 +77,7 @@ async function handleRequest(details) {
 
   // Track API requests (XHR/fetch) grouped by page domain
   if (details.type === 'xmlhttprequest' && details.tabId > 0) {
-    handleApiTracking(details);
+    handleApiMonitoring(details);
   }
 
   try {
@@ -181,7 +181,7 @@ function showRotationNotification(result, storedData) {
 }
 
 // API Monitoring - record XHR/fetch requests grouped by page domain
-async function handleApiTracking(details) {
+async function handleApiMonitoring(details) {
   try {
     // Get the tab to find the page URL
     const tab = await chrome.tabs.get(details.tabId);
