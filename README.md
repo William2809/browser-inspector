@@ -1,5 +1,9 @@
 # Browser Interceptor
 
+[![CI](https://github.com/william2809/browser-interceptor/actions/workflows/ci.yml/badge.svg)](https://github.com/william2809/browser-interceptor/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Security Analysis](https://img.shields.io/badge/security-audited-brightgreen)](SECURITY.md)
+
 A **100% local** developer tool for intercepting and inspecting auth tokens from your own network requests. Like browser DevTools but more intuitive and focused on authentication debugging.
 
 ## Security Guarantee
@@ -32,6 +36,11 @@ A **100% local** developer tool for intercepting and inspecting auth tokens from
 - **Multi-Service Debug**: Track tokens across different microservices
 - **Token Lifecycle**: Monitor when tokens refresh during development
 - **Portfolio Projects**: Use your own credentials in custom analysis tools
+
+## Screenshots
+
+![Browser Interceptor popup UI](assets/screenshots/popup-ui.png)
+![Rules and settings tab](assets/screenshots/rules-ui.png)
 
 ## Installation
 
@@ -164,11 +173,14 @@ class MyHandler extends BaseHandler {
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Write tests for new functionality
-4. Ensure all tests pass: `npm test`
-5. Submit a pull request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution
+workflow details. Please also review [SECURITY.md](SECURITY.md).
+
+## Acknowledgments
+
+- Thanks to the open-source community for the tools and inspiration that make
+  browser extensions accessible.
+- Portions of documentation and copy were drafted with the help of AI tools.
 
 ## License
 

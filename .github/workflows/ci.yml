@@ -66,6 +66,14 @@ jobs:
             exit 1
           fi
           echo "No analytics or telemetry found."
+      - name: Check for eval usage
+        run: |
+          echo "Checking for eval or dynamic code execution..."
+          if grep -rE "(\\beval\\s*\\(|new Function\\b)" src/; then
+            echo "ERROR: Found eval or dynamic code execution!"
+            exit 1
+          fi
+          echo "No eval usage found."
 
   lint:
     name: Lint
